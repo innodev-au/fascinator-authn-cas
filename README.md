@@ -1,4 +1,4 @@
 fascinator-authn-cas
 ====================
 
-CAS authentication plugin for The Fascinator
+CAS authentication plugin for The Fascinator.
