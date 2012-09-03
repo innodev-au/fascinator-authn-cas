@@ -35,33 +35,64 @@ public class CAS implements SSOInterface {
 	public static final String CAS_PLUGIN_ID = "CAS";
 
 	public static final String PROP_CAS_SERVER_URL = "casServerUrl";
+	public static final String PROP_SSO_LOGOUT = "ssoLogout";
 	public static final String PROP_TICKET_VALIDATOR_CLASS = "ticketValidatorClassName";
 
-	private static final String DEFAULT_TICKET_VALIDATOR_CLASS = "org.jasig.cas.client.validation.Cas10TicketValidator";
+	private static final String CAS_TICKET_HTTP_HEADER = "ticket";
 
 	private static final String RETURN_ADDRESS = "cas-return-address";
-	private static final String CAS_TICKET_PARAM = "ticket";
+	private static final String CAS_TICKET = "cas-" + CAS_TICKET_HTTP_HEADER;
 	private static final String CAS_USERNAME = "cas-username";
 
 	private static final Logger logger = LoggerFactory.getLogger(CAS.class);
 
-	private String casServerUrl;			// URL of the CAS server, e.g. https://cas.yourdomain.edu.au/
-	private String ticketValidatorClass;	// Fully qualified name of the ticket validator class to instantiate
-	private Template casTemplate;			// Velocity template for the CAS login
+	private String casServerUrl;				// URL of the CAS server, e.g. https://cas.yourdomain.edu.au/
+	private boolean enableSsoLogout = false;	// Flag indicating if Single Sign Out is enabled
+	private TicketValidator ticketValidator;	// Validates CAS tickets for all login attempts
+	private Template casTemplate;				// Velocity template for the CAS login
 
     {
         try {
             logger.debug(String.format("Resource Loader Path: %s", Velocity.getProperty(Velocity.FILE_RESOURCE_LOADER_PATH).toString()));
             casTemplate = Velocity.getTemplate("cas/interface.vm");
 
+            // read CAS configuration
             JsonSimpleConfig config = new JsonSimpleConfig();
-            casServerUrl = config.getString("cas-server-url-not-specified-in-config", CAS_PLUGIN_ID, PROP_CAS_SERVER_URL);
-            ticketValidatorClass = config.getString(DEFAULT_TICKET_VALIDATOR_CLASS, CAS_PLUGIN_ID, PROP_TICKET_VALIDATOR_CLASS);
+            casServerUrl = config.getString("cas-server-url-not-specified", CAS_PLUGIN_ID, PROP_CAS_SERVER_URL);
+            enableSsoLogout = config.getBoolean(Boolean.FALSE, CAS_PLUGIN_ID, PROP_SSO_LOGOUT).booleanValue();
+
+            // create the ticket validator based on config values
+            String ticketValidatorClass = config.getString(null, CAS_PLUGIN_ID, PROP_TICKET_VALIDATOR_CLASS);
+            ticketValidator = createTicketValidator(ticketValidatorClass, casServerUrl);
         }
         catch (Exception ex) {
             logger.error("Error during class initialisation", ex);
         }
     }
+
+    /**
+     * Construct a CAS ticket validator using the provided class parameter. If there is a problem
+     * creating the requested ticket validator class, a CAS 1.0 ticket validator is returned instead.
+     * @param className The fully qualified name of the ticket validator class to instantiate 
+     * @param casServerUrlPrefix URL prefix for the CAS server, e.g. https://cas.institution.ed.au/
+     * @return The constructed ticket validator
+     */
+	private TicketValidator createTicketValidator(String className, String casServerUrlPrefix) {
+		// try to construct the validator class passed in as a parameter
+		if (CommonUtils.isNotBlank(className)) {
+			try {
+				final Class<TicketValidator> validatorClass = ReflectUtils.loadClass(className);
+				return ReflectUtils.newInstance(validatorClass, casServerUrlPrefix);
+			}
+			catch (Exception ex) {
+				logger.warn("Couldn't create ticket validator for class: " + className, ex);
+			}
+		}
+
+		// backup plan: create a CAS 1.0 ticket validator
+		// (assumes later CAS server versions are backwards compatible with 1.0 clients)
+		return new Cas10TicketValidator(casServerUrlPrefix);
+	}
 
     @Override
 	public String getId() {
@@ -119,17 +150,19 @@ public class CAS implements SSOInterface {
         logger.trace("logout, current user: " + session.get(CAS_USERNAME));
 		clearUserLoginDetailsFromSession(session);
 
-		// TODO: tell the CAS server that the user has logged out
-		// FIXME: should this action be configurable?
-        String returnAddress = (String) session.get(RETURN_ADDRESS);
-        String logoutUrl = CommonUtils.constructRedirectUrl(casServerUrl, "service", returnAddress, false, false);
+		if (enableSsoLogout) {
+			// tell the CAS server that the user has logged out
+	        String returnAddress = (String) session.get(RETURN_ADDRESS);
+	        String logoutUrl = CommonUtils.constructRedirectUrl(casServerUrl, "service", returnAddress, false, false);
+	        // FIXME
+		}
 	}
 
 	@Override
 	public void ssoInit(JsonSessionState session, HttpServletRequest request) throws Exception {
 		// save the CAS ticket (required to validate user login in ssoCheckUserDetails)
         logger.trace("ssoInit, saving CAS ticket into session");
-        session.set(CAS_TICKET_PARAM, request.getParameter(CAS_TICKET_PARAM));
+        session.set(CAS_TICKET, request.getParameter(CAS_TICKET_HTTP_HEADER));
 	}
 
 	/**
@@ -137,7 +170,7 @@ public class CAS implements SSOInterface {
 	 * @param session The server session data
 	 */
 	private void clearUserLoginDetailsFromSession(JsonSessionState session) {
-		session.remove(CAS_TICKET_PARAM);
+		session.remove(CAS_TICKET);
 		session.remove(CAS_USERNAME);
 	}
 
@@ -146,13 +179,12 @@ public class CAS implements SSOInterface {
 		Object sessionUsername = session.get(CAS_USERNAME);
 		if (sessionUsername == null || ((String) sessionUsername).length() == 0) {
 			// we don't already have the user's login details in the session
-			String ticket = (String) session.get(CAS_TICKET_PARAM);
+			String ticket = (String) session.get(CAS_TICKET);
 	        String returnAddress = (String) session.get(RETURN_ADDRESS);
 	        logger.trace("ssoCheckUserDetails, CAS ticket: " + ticket);
 
 	        try {
 	        	// check the CAS ticket
-		        TicketValidator ticketValidator = createTicketValidator();
 	        	Assertion assertion = ticketValidator.validate(ticket, returnAddress);
 	        	String username = assertion.getPrincipal().getName();
 	        	logger.trace("ssoCheckUserDetails, username: " + username);
@@ -165,21 +197,6 @@ public class CAS implements SSOInterface {
 		else {
 	        logger.trace("ssoCheckUserDetails, user '" + sessionUsername + "' is already logged in");
 		}
-	}
-
-	private TicketValidator createTicketValidator() {
-		// try to construct the validator based on config
-		try {
-			final Class<TicketValidator> validatorClass = ReflectUtils.loadClass(ticketValidatorClass);
-			return ReflectUtils.newInstance(validatorClass, casServerUrl);
-		}
-		catch (Exception ex) {
-			logger.error("Couldn't create ticket validator for class: " + ticketValidatorClass);
-		}
-
-		// backup plan: create a CAS1.0 ticket validator
-		// (assumes later CAS server versions are backwards compatible with 1.0 clients)
-		return new Cas10TicketValidator(casServerUrl);
 	}
 
 	@Override
