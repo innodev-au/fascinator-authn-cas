@@ -110,7 +110,7 @@ public class CAS implements SSOInterface {
         StringWriter sw = new StringWriter();
         VelocityContext vc = new VelocityContext();
         try {
-            vc.put("cas_url", ssoUrl.replace("default/sso", "default/sso/cas"));
+            vc.put("cas_url", ssoUrl);
             casTemplate.merge(vc, sw);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -154,7 +154,7 @@ public class CAS implements SSOInterface {
 			// tell the CAS server that the user has logged out
 	        String returnAddress = (String) session.get(RETURN_ADDRESS);
 	        String logoutUrl = CommonUtils.constructRedirectUrl(casServerUrl, "service", returnAddress, false, false);
-	        // FIXME
+	        // TODO: complete when support is added to PortalSecurityManager 
 		}
 	}
 
