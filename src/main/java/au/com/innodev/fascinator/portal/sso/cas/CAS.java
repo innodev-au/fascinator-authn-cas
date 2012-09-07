@@ -150,12 +150,13 @@ public class CAS implements SSOInterface {
         logger.trace("logout, current user: " + session.get(CAS_USERNAME));
 		clearUserLoginDetailsFromSession(session);
 
-		if (enableSsoLogout) {
+/*		if (enableSsoLogout) {
 			// tell the CAS server that the user has logged out
 	        String returnAddress = (String) session.get(RETURN_ADDRESS);
 	        String logoutUrl = CommonUtils.constructRedirectUrl(casServerUrl, "service", returnAddress, false, false);
 	        // TODO: complete when support is added to PortalSecurityManager 
 		}
+*/
 	}
 
 	@Override
