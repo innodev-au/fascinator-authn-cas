@@ -2,6 +2,7 @@ package au.com.innodev.fascinator.portal.sso.cas;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -121,7 +122,8 @@ public class CAS implements SSOInterface {
 	@Override
 	public List<String> getRolesList(JsonSessionState session) {
 		// CAS does not supply user role information
-		return Collections.emptyList();
+		return new ArrayList<String>();
+		// should return Collections.emptyList(), but this currently breaks PortalSecurityManagerImpl
 	}
 
 	@Override
