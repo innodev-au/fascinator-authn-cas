@@ -71,7 +71,8 @@ In the sso section of home/config/system-config.json, enable the CAS plugin:
 	.
 	.
 
-**CAS**
+CAS
+---
 
 Add the CAS configuration section (at the top level of the JSON config):
 
