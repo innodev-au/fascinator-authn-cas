@@ -23,7 +23,7 @@
     <groupId>au.com.innodev.fascinator</groupId>
     <artifactId>fascinator-authn-cas</artifactId>
     <name>The Fascinator - Plugin - Authentication - CAS</name>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.1</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -130,6 +130,7 @@
         <connection>scm:git://github.com/innodev-au/fascinator-authn-cas.git</connection>
         <developerConnection>scm:git:ssh://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
         <!--<developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>-->
-    </scm>
+      <tag>fascinator-authn-cas-0.0.1</tag>
+  </scm>
 
 </project>
