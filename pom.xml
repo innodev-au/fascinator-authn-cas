@@ -122,4 +122,5 @@
         <developerConnection>scm:git:ssh://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
         <!--<developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>-->
     </scm>
+
 </project>
