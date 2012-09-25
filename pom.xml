@@ -133,4 +133,11 @@
         <tag>HEAD</tag>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>maven.adelaide.edu.au</id>
+            <name>maven.adelaide.edu.au-releases</name>
+            <url>https://maven.adelaide.edu.au/artifactory/ext-releases-local</url>
+        </repository>
+    </distributionManagement>
 </project>
