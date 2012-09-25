@@ -24,7 +24,8 @@
 
     <groupId>au.com.innodev.fascinator</groupId>
     <artifactId>fascinator-authn-cas</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <name>The Fascinator - Plugin - Authentication - CAS</name>
+	<version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
