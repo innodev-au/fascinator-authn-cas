@@ -115,10 +115,8 @@
             </plugin>
         </plugins>
     </build>
-
     <scm>
         <url>https://github.com/innodev-au/fascinator-authn-cas</url>
         <developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
     </scm>
-
 </project>
