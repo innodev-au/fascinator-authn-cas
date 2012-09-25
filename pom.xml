@@ -49,7 +49,6 @@
 			<groupId>org.jasig.cas.client</groupId>
 			<artifactId>cas-client-core</artifactId>
 			<version>3.2.1</version>
-<!-- 			<scope>runtime</scope> -->
 			<type>jar</type>
    		</dependency>
         <dependency>
@@ -117,5 +116,10 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <url>https://github.com/innodev-au/fascinator-authn-cas</url>
+        <developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
+    </scm>
 
 </project>
