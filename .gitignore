@@ -9,3 +9,5 @@ target
 *.jar
 *.war
 *.ear
+/release.properties
+/pom.xml.releaseBackup
