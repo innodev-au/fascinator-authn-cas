@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  The Fascinator - CAS SSO Plugin
- Copyright (C) 2012 Innodev Pty Ltd
+ Copyright (C) 2012 University of Adelaide
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>au.com.innodev.fascinator</groupId>
-    <artifactId>fascinator-authn-cas</artifactId>
+    <groupId>au.edu.adelaide.fascinator</groupId>
+    <artifactId>plugin-authentication-cas</artifactId>
     <name>The Fascinator - Plugin - Authentication - CAS</name>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.0-UoA</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -128,7 +128,6 @@
     <scm>
         <url>scm:git://github.com/innodev-au/fascinator-authn-cas.git</url>
         <connection>scm:git://github.com/innodev-au/fascinator-authn-cas.git</connection>
-        <!-- <developerConnection>scm:git:ssh://github.com/innodev-au/fascinator-authn-cas.git</developerConnection> -->
         <developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
