@@ -23,7 +23,7 @@
     <groupId>au.edu.adelaide.fascinator</groupId>
     <artifactId>plugin-authentication-cas</artifactId>
     <name>The Fascinator - Plugin - Authentication - CAS</name>
-	<version>1.0-UoA</version>
+	<version>1.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -131,12 +131,4 @@
         <developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>maven.adelaide.edu.au</id>
-            <name>maven.adelaide.edu.au-releases</name>
-            <url>https://maven.adelaide.edu.au/artifactory/ext-releases-local</url>
-        </repository>
-    </distributionManagement>
 </project>
