@@ -1,1 +1,1 @@
-<a id="cas-login" href="$cas_url"><img title="CAS" src="casLogo.jpg" alt="Central Authentication Service login"></a>
+<a id="cas-login" href="$cas_url">Central Authentication Service login</a>
