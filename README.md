@@ -19,7 +19,7 @@ To include the CAS plugin in your institutional build (when using ReDBox for exa
 add the following dependency to your pom.xml:
 
 		<dependency>
-			<groupId>au.com.innodev.fascinator</groupId>
+			<groupId>au.edu.adelaide.fascinator</groupId>
 		    <artifactId>fascinator-authn-cas</artifactId>
 		    <version>${cas.plugin.version}</version>
 		</dependency>
@@ -48,7 +48,7 @@ You will need to add the unpack-cas-conf execution to the maven-dependency-plugi
 							<outputDirectory>${project.home}</outputDirectory>
 							<artifactItems>
 								<artifactItem>
-								    <groupId>au.com.innodev.fascinator</groupId>
+								    <groupId>au.edu.adelaide.fascinator</groupId>
 								    <artifactId>fascinator-authn-cas</artifactId>
 									<classifier>redbox-config</classifier>
 									<type>zip</type>
