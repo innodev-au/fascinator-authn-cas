@@ -4,6 +4,8 @@ CAS SSO plugin for The Fascinator
 This project is a plugin for The Fascinator project: https://code.google.com/p/the-fascinator
 though, typically, it would be used in an institutional build of ReDBox: http://code.google.com/p/redbox-mint/ .
 
+[ANDS-funded development done as part of the Metadata Stores project.]
+
 This plugin assumes that a CAS server has already been setup for use within the institution.
 
 Note that CAS is only used for authentication (not authorisation), so you will need to configure a
