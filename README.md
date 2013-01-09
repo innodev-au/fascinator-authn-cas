@@ -90,7 +90,6 @@ this URL with the appropriate CAS command (eg. validate) and parameters. This el
 The `ssoLogout` element contains a boolean value that tells the CAS plugin whether it should notify the
 CAS server when a user has logged out. This tells the CAS server that the user needs to supply their password
 for the next CAS login. This element is optional. If omitted, this value defaults to false.
-* Note that SSO logout functionality is not currently implemented as it requires a change to the PortalSecurityManager.
 
 ### ticketValidatorClassName
 The `ticketValidatorClassName` element defines the fully qualified class name that should be used to
