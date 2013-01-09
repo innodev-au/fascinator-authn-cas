@@ -3,7 +3,6 @@ package au.com.innodev.fascinator.portal.sso.cas;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +46,8 @@ public class CAS implements SSOInterface {
 
 	private static final Logger logger = LoggerFactory.getLogger(CAS.class);
 
-	private String casServerUrl;				// URL of the CAS server, e.g. https://cas.yourdomain.edu.au/
+	private String casLoginUrl;					// Login URL of the CAS server, e.g. https://cas.yourdomain.edu.au/login
+	private String casLogoutUrl;				// Logout URL of the CAS server, e.g. https://cas.yourdomain.edu.au/logout
 	private boolean enableSsoLogout = false;	// Flag indicating if Single Sign Out is enabled
 	private TicketValidator ticketValidator;	// Validates CAS tickets for all login attempts
 	private Template casTemplate;				// Velocity template for the CAS login
@@ -59,8 +59,17 @@ public class CAS implements SSOInterface {
 
             // read CAS configuration
             JsonSimpleConfig config = new JsonSimpleConfig();
-            casServerUrl = config.getString("cas-server-url-not-specified", CAS_PLUGIN_ID, PROP_CAS_SERVER_URL);
             enableSsoLogout = config.getBoolean(Boolean.FALSE, CAS_PLUGIN_ID, PROP_SSO_LOGOUT).booleanValue();
+            String casServerUrl = config.getString("cas-server-url-not-specified", CAS_PLUGIN_ID, PROP_CAS_SERVER_URL);
+
+            if (casServerUrl.endsWith("/")) {
+	            casLoginUrl = casServerUrl + "login";
+	            casLogoutUrl = casServerUrl + "logout";
+            }
+            else {
+	            casLoginUrl = casServerUrl + "/login";
+	            casLogoutUrl = casServerUrl + "/logout";
+            }
 
             // create the ticket validator based on config values
             String ticketValidatorClass = config.getString(null, CAS_PLUGIN_ID, PROP_TICKET_VALIDATOR_CLASS);
@@ -151,14 +160,6 @@ public class CAS implements SSOInterface {
 	public void logout(JsonSessionState session) {
         logger.trace("logout, current user: " + session.get(CAS_USERNAME));
 		clearUserLoginDetailsFromSession(session);
-
-/*		if (enableSsoLogout) {
-			// tell the CAS server that the user has logged out
-	        String returnAddress = (String) session.get(RETURN_ADDRESS);
-	        String logoutUrl = CommonUtils.constructRedirectUrl(casServerUrl, "service", returnAddress, false, false);
-	        // TODO: complete when support is added to PortalSecurityManager 
-		}
-*/
 	}
 
 	@Override
@@ -206,11 +207,27 @@ public class CAS implements SSOInterface {
 	public String ssoGetRemoteLogonURL(JsonSessionState session) {
         String returnAddress = (String) session.get(RETURN_ADDRESS);
 
-		// construct CAS URL, using the return address as the service URL
-        String remoteUrl = CommonUtils.constructRedirectUrl(casServerUrl, "service", returnAddress, false, false);
+		// construct CAS login URL, using the return address as the service URL
+        String remoteUrl = CommonUtils.constructRedirectUrl(casLoginUrl, "service", returnAddress, false, false);
         logger.trace("ssoGetRemoteLogonURL, Remote Logon URL: " + remoteUrl);
 
         return remoteUrl;
+	}
+
+	public String ssoGetRemoteLogoutURL(JsonSessionState session) {
+		if (enableSsoLogout) {
+	        String returnAddress = (String) session.get(RETURN_ADDRESS);
+
+			// construct CAS logout URL, using the return address as the service URL
+	        String remoteUrl = CommonUtils.constructRedirectUrl(casLogoutUrl, "service", returnAddress, false, false);
+	        logger.trace("ssoGetRemoteLogoutURL, Remote Logout URL: " + remoteUrl);
+
+	        return remoteUrl;
+		}
+		else {
+	        logger.trace("ssoGetRemoteLogoutURL, CAS logout disabled by configuration, returning null");
+			return null;
+		}
 	}
 
 	@Override
