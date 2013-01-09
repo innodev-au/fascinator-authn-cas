@@ -23,7 +23,7 @@
     <groupId>au.edu.adelaide.fascinator</groupId>
     <artifactId>plugin-authentication-cas</artifactId>
     <name>The Fascinator - Plugin - Authentication - CAS</name>
-	<version>1.4-UoA-SNAPSHOT</version>
+	<version>1.4-UoA</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,13 +34,13 @@
         <dependency>
             <groupId>com.googlecode.the-fascinator</groupId>
             <artifactId>fascinator-portal</artifactId>
-            <version>${fascinator.version}</version>
+            <version>1.1.2</version>
             <type>warpath</type>
         </dependency>
         <dependency>
             <groupId>com.googlecode.the-fascinator</groupId>
             <artifactId>fascinator-portal</artifactId>
-            <version>${fascinator.version}</version>
+            <version>1.1.2</version>
             <classifier>classes</classifier>
             <type>jar</type>
         </dependency>
@@ -148,6 +148,6 @@
         <url>scm:git://github.com/innodev-au/fascinator-authn-cas.git</url>
         <connection>scm:git://github.com/innodev-au/fascinator-authn-cas.git</connection>
         <developerConnection>scm:git:https://github.com/innodev-au/fascinator-authn-cas.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>plugin-authentication-cas-1.4-UoA</tag>
     </scm>
 </project>
