@@ -18,7 +18,7 @@ add the following dependency to your pom.xml:
 
 		<dependency>
 		    <groupId>au.edu.adelaide.fascinator</groupId>
-		    <artifactId>fascinator-authn-cas</artifactId>
+		    <artifactId>plugin-authentication-cas</artifactId>
 		    <version>BUILT_VERSION</version>
 		</dependency>
 
@@ -47,9 +47,9 @@ You will need to add the unpack-cas-conf execution to the maven-dependency-plugi
 							<artifactItems>
 								<artifactItem>
 								    <groupId>au.edu.adelaide.fascinator</groupId>
-								    <artifactId>fascinator-authn-cas</artifactId>
-									<classifier>redbox-config</classifier>
-									<type>zip</type>
+								    <artifactId>plugin-authentication-cas</artifactId>
+								    <classifier>redbox-config</classifier>
+								    <type>zip</type>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
